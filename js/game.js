@@ -8,16 +8,35 @@ game.style.backgroundColor = "white";
 
 const ballList = [];
 
-for (let i = 0; i < 10; i++) {
-  const randomX = Math.random() * windowWidth;
-  const randomY = Math.random() * windowHeight;
-  const ball = new Ball({
+function generateBall(radius) {
+  const randomX = Math.random() * (windowWidth - radius);
+  const randomY = Math.random() * (windowHeight - radius);
+  return {
     position: { x: randomX, y: randomY },
-    dimension: { x: 50, y: 50 },
-    color: "green",
-  });
+    dimension: { x: radius, y: radius },
+    color: getRandomColor(),
+  };
+}
 
-  ballList.push(ball);
+for (let i = 0; i < 20; i++) {
+  let radius = Math.floor(Math.random() * 51) + 50;
+  let ball;
+  let attempts = 0;
+
+  do {
+    ball = generateBall(radius);
+    attempts++;
+  } while (
+    // .some method return true if one ball also collides
+    ballList.some((existingBall) => isColliding(existingBall, ball)) &&
+    attempts < 100
+  );
+
+  if (attempts < 100) {
+    ballList.push(new Ball(ball));
+  } else {
+    console.warn("Failed to place ball without collision after 100 attempts");
+  }
 }
 
 for (let ball of ballList) {
@@ -39,13 +58,16 @@ function Animate() {
       let radiusSum = ball_first.width / 2 + ball_second.width / 2;
 
       if (getDistance(...first_center, ...second_center) <= radiusSum) {
-        console.log("collision detected");
+        let mass1 = ball_first.width ** 3 * 0.001;
+        let mass2 = ball_second.width ** 3 * 0.001;
 
         let [v1x_final, v1y_final, v2x_final, v2y_final] = handleCollision(
           ...first_center,
           ...second_center,
           ...ball_first.getVelocity(),
-          ...ball_second.getVelocity()
+          ...ball_second.getVelocity(),
+          mass1,
+          mass2
         );
         ball_first.updateVelocity(v1x_final, v1y_final);
         ball_second.updateVelocity(v2x_final, v2y_final);

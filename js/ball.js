@@ -1,11 +1,14 @@
 class Ball {
   constructor({ position, dimension, color }) {
+    console.log("dimension", dimension);
     this.position = position;
     this.velocity = { vx: Math.random() * 10, vy: Math.random() * 10 };
 
-    this.height = dimension.height || 50;
-    this.width = dimension.width || 50;
+    this.height = dimension.y;
+    this.width = dimension.x;
+    console.log(this.width);
     this.color = color || "white";
+
     this.draw();
   }
 
@@ -22,20 +25,22 @@ class Ball {
   }
 
   update() {
-    // collision at right side of screen
+    // Handle horizontal collisions
+    // right side collision
     if (this.position.x + this.velocity.vx + this.width >= windowWidth) {
       this.velocity.vx *= -1;
-    } else {
-      this.position.x += this.velocity.vx;
+      this.position.x = windowWidth - this.width;
     }
-    // collision at left side of screen
-    // adding velocity as it will be negative after colliding with right side of wall
-    if (this.position.x + this.velocity.vx <= 0) {
+    // left side collision
+    else if (this.position.x + this.velocity.vx <= 0) {
       this.velocity.vx *= -1;
+      this.position.x = 0;
     } else {
       this.position.x += this.velocity.vx;
     }
-    // collsion at button of screen
+
+    // Handle vertical collisions
+    // bottom side collision
     if (
       this.position.y +
         this.velocity.vy +
@@ -44,22 +49,23 @@ class Ball {
         10 >=
       windowHeight
     ) {
-      // here 0.7 is dumping facotr // i have removed 0.7 as it is elastic collision
       this.velocity.vy *= -1;
+      this.position.y = windowHeight - this.height - 10;
+    }
+    // top side collision
+    else if (this.position.y + this.velocity.vy <= 0) {
+      this.velocity.vy *= -1;
+      this.position.y = 0;
     } else {
       this.position.y += this.velocity.vy;
     }
-    // collision at top of screen // velocity of y is negative after colliding with button of screen
-    if (this.position.y + this.velocity.vy <= 0) {
-      this.position.y = 0;
-      this.velocity.vy *= -1;
-    }
+
+    this.gravity();
 
     this.ball.style.left = this.position.x + "px";
     this.ball.style.top = this.position.y + "px";
-
-    this.gravity();
   }
+
   // this.draw();
 
   gravity() {
