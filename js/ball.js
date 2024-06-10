@@ -32,15 +32,15 @@ export class Ball {
   }
 
   update() {
+    this.position.x += this.velocity.vx;
+    this.position.y += this.velocity.vy;
     // Handle horizontal collisions
-    if (this.position.x + this.width > windowWidth) {
+    if (this.position.x + this.width >= windowWidth) {
       this.velocity.vx *= -1;
-      this.position.x = windowWidth - this.width;
+      this.position.x = Math.max(windowWidth, this.position.x);
     } else if (this.position.x < 0) {
       this.velocity.vx *= -1;
       this.position.x = 0;
-    } else {
-      this.position.x += this.velocity.vx;
     }
 
     // Handle vertical collisions
@@ -50,8 +50,6 @@ export class Ball {
     } else if (this.position.y < 0) {
       this.velocity.vy *= -1;
       this.position.y = 0;
-    } else {
-      this.position.y += this.velocity.vy;
     }
 
     this.ball.style.left = this.position.x + "px";

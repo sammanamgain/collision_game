@@ -25,7 +25,7 @@ function generateBall(radius) {
   };
 }
 
-for (let i = 0; i < 500; i++) {
+for (let i = 0; i < 100; i++) {
   let radius = 20;
   // let radius = Math.floor(Math.random() * 30) + 20;
   let ball;
