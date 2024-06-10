@@ -64,15 +64,17 @@ export class Ball {
     this.ball.style.left = this.position.x + "px";
     this.ball.style.top = this.position.y + "px";
   }
+  // to update velocity when collision
 
   updateVelocity(vx, vy) {
     this.velocity.vx = vx;
     this.velocity.vy = vy;
   }
-
+ // return ball 
   getElement() {
     return this.ball;
   }
+  
 
   getCenter() {
     return [

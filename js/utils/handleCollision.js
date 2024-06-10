@@ -27,7 +27,7 @@ export function handleCollision(ball_first, ball_second) {
   let vy1_collision_final = u1y_collision;
   let vy2_collision_final = u2y_collision;
 
-  // rotating back
+  // rotating back to original axis
   let v1x_final =
     vx1_collision_final * Math.cos(-angle) +
     vy1_collision_final * Math.sin(-angle);

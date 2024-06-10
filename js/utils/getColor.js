@@ -1,4 +1,4 @@
- export  function getRandomColor() {
+export function getRandomColor() {
   const colors = [
     "red",
     "orange",

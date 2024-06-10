@@ -12,6 +12,8 @@ game.style.backgroundColor = "white";
 
 const ballList = [];
 
+// genereate the ball at random position  
+
 function generateBall(radius) {
   const randomX = Math.max(Math.random() * (windowWidth - radius - 20), radius);
   const randomY = Math.max(
@@ -25,6 +27,9 @@ function generateBall(radius) {
   };
 }
 
+
+
+ // to ensure that it won't collide with other ball at initial step
 for (let i = 0; i < 100; i++) {
   //let radius = 20;
   let radius = Math.floor(Math.random() * 20) + 10;
@@ -46,16 +51,14 @@ for (let i = 0; i < 100; i++) {
     console.log("Failed to place ball without collision after 100 attempts");
   }
 }
+// adding ball in dom tree
 
 for (let ball of ballList) {
   game.appendChild(ball.getElement());
 }
 
 function Animate() {
-  // for (let ball of ballList) {
-  //   ball.update();
-  // }
-  //checkCollisionsInGrid();
+
   for (let i = 0; i < ballList.length; i++) {
     let ball_first = ballList[i];
     ball_first.update();
