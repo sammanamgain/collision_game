@@ -1,6 +1,16 @@
-function handleCollision(x1, y1, x2, y2, u1x, u1y, u2x, u2y, m1, m2) {
+export function handleCollision(ball_first, ball_second) {
+  let [x1, y1] = ball_first.getCenter();
+  let [x2, y2] = ball_second.getCenter();
+  let [u1x, u1y] = ball_first.getVelocity();
+  let [u2x, u2y] = ball_second.getVelocity();
+  let m1 = ball_first.mass;
+  let m2 = ball_second.mass;
+
   let dx = x2 - x1;
   let dy = y2 - y1;
+
+  let distance = Math.sqrt(dx * dx + dy * dy);
+
   let angle = Math.atan2(dy, dx);
 
   // rotating along the axis of collision
@@ -31,6 +41,17 @@ function handleCollision(x1, y1, x2, y2, u1x, u1y, u2x, u2y, m1, m2) {
     vy2_collision_final * Math.cos(-angle) -
     vx2_collision_final * Math.sin(-angle);
 
+  ball_first.updateVelocity(v1x_final, v1y_final);
+  ball_second.updateVelocity(v2x_final, v2y_final);
+
+  // Positional correction
+  let overlap = ball_first.width + ball_second.width - distance;
+  let correctionX = (overlap / 2) * Math.cos(angle);
+  let correctionY = (overlap / 2) * Math.sin(angle);
+
+  // Reposition the balls
+  ball_first.updatePosition(x1 - correctionX, y1 - correctionY);
+  ball_second.updatePosition(x2 + correctionX, y2 + correctionY);
 
   return [v1x_final, v1y_final, v2x_final, v2y_final];
 }

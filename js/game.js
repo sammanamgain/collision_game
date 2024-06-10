@@ -1,7 +1,11 @@
 const gravity = 9.8;
 const windowWidth = window.innerWidth;
 const windowHeight = window.innerHeight;
+import { getRandomColor } from "./utils/getColor";
+import { handleCollision } from "./utils/handleCollision";
+import { getDistance, isColliding } from "./utils/getDistance";
 
+import { Ball } from "./ball";
 const game = document.getElementsByClassName("game")[0];
 game.style.border = "3px solid red";
 game.style.backgroundColor = "white";
@@ -21,8 +25,9 @@ function generateBall(radius) {
   };
 }
 
-for (let i = 0; i < 100; i++) {
-  let radius = Math.floor(Math.random() * 40) + 20;
+for (let i = 0; i < 500; i++) {
+  let radius = 20;
+  // let radius = Math.floor(Math.random() * 30) + 20;
   let ball;
   let attempts = 0;
 
@@ -43,19 +48,18 @@ for (let i = 0; i < 100; i++) {
 }
 
 for (let ball of ballList) {
-
-
   game.appendChild(ball.getElement());
 }
-console.log(grid);
+
 function Animate() {
-  for (let ball of ballList) {
-    ball.update();
-  }
+  // for (let ball of ballList) {
+  //   ball.update();
+  // }
   //checkCollisionsInGrid();
   for (let i = 0; i < ballList.length; i++) {
+    let ball_first = ballList[i];
+    ball_first.update();
     for (let j = i + 1; j < ballList.length; j++) {
-      let ball_first = ballList[i];
       let ball_second = ballList[j];
 
       let first_center = ball_first.getCenter();
@@ -63,20 +67,12 @@ function Animate() {
 
       let radiusSum = ball_first.width / 2 + ball_second.width / 2;
 
-      if (getDistance(...first_center, ...second_center) <= radiusSum) {
-        let mass1 = ball_first.width ** 3 * 0.001;
-        let mass2 = ball_second.width ** 3 * 0.001;
-        // console.log(...ball_first.getVelocity(), ...ball_second.getVelocity());
-
+      if (getDistance(...first_center, ...second_center) <= radiusSum + 2) {
         let [v1x_final, v1y_final, v2x_final, v2y_final] = handleCollision(
-          ...first_center,
-          ...second_center,
-          ...ball_first.getVelocity(),
-          ...ball_second.getVelocity(),
-          mass1,
-          mass2
+          ball_first,
+          ball_second
         );
-        //    console.log(v1x_final, v1y_final, v2x_final, v2y_final);
+
         ball_first.updateVelocity(v1x_final, v1y_final);
         ball_second.updateVelocity(v2x_final, v2y_final);
       }

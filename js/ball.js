@@ -1,4 +1,7 @@
-class Ball {
+const windowWidth = window.innerWidth;
+const windowHeight = window.innerHeight;
+
+export class Ball {
   constructor({ position, dimension, color }) {
     this.position = position;
     this.velocity = {
@@ -10,6 +13,7 @@ class Ball {
     this.width = dimension.x;
 
     this.color = color || "white";
+    this.mass = this.width ** 3 * 0.0001;
 
     this.draw();
   }
@@ -24,17 +28,15 @@ class Ball {
     this.ball.style.backgroundColor = `${this.color}`;
     this.ball.style.borderRadius = "50%";
     this.event();
+    document.body.appendChild(this.ball);
   }
 
   update() {
     // Handle horizontal collisions
-    // right side collision
-    if (this.position.x + this.velocity.vx + this.width >= windowWidth) {
+    if (this.position.x + this.width > windowWidth) {
       this.velocity.vx *= -1;
       this.position.x = windowWidth - this.width;
-    }
-    // left side collision
-    else if (this.position.x + this.velocity.vx <= 0) {
+    } else if (this.position.x < 0) {
       this.velocity.vx *= -1;
       this.position.x = 0;
     } else {
@@ -42,61 +44,36 @@ class Ball {
     }
 
     // Handle vertical collisions
-    // bottom side collision
-    if (
-      this.position.y +
-        this.velocity.vy +
-        gravity * 0.00695 +
-        this.height +
-        10 >=
-      windowHeight
-    ) {
+    if (this.position.y + this.height > windowHeight) {
       this.velocity.vy *= -1;
-      this.position.y = windowHeight - this.height - 10;
-    }
-    // top side collision
-    else if (this.position.y + this.velocity.vy <= 0) {
+      this.position.y = windowHeight - this.height;
+    } else if (this.position.y < 0) {
       this.velocity.vy *= -1;
       this.position.y = 0;
     } else {
       this.position.y += this.velocity.vy;
     }
 
-    // const cellX = Math.floor(this.position.x / 100);
-    // const cellY = Math.floor(this.position.y / 100);
-    // console.log(cellX, cellY);
-    // console.log(grid);
-    // if (
-    //   grid &&
-    //   cellX >= 0 &&
-    //   cellX < numCellsX &&
-    //   cellY >= 0 &&
-    //   cellY < numCellsY
-    // ) {
-    //   grid[cellY][cellX].push(this);
-    // } else {
-    //   console.log("Invalid grid coordinates");
-    // }
     this.ball.style.left = this.position.x + "px";
     this.ball.style.top = this.position.y + "px";
-    // this.gravity();
   }
 
-  // this.draw();
-
-  gravity() {
-    //using  v= u +at
-    this.velocity.vy += gravity * 0.000695;
+  updatePosition(x, y) {
+    this.position.x = x;
+    this.position.y = y;
+    this.ball.style.left = this.position.x + "px";
+    this.ball.style.top = this.position.y + "px";
   }
-  updateVelocity(v1x_final, v1y_final) {
-    this.velocity.vx = v1x_final;
-    this.velocity.vy = v1y_final;
-    this.update();
+
+  updateVelocity(vx, vy) {
+    this.velocity.vx = vx;
+    this.velocity.vy = vy;
   }
 
   getElement() {
     return this.ball;
   }
+
   getCenter() {
     return [
       this.position.x + this.width / 2,
@@ -105,12 +82,11 @@ class Ball {
   }
 
   getVelocity() {
-    return [this.velocity.vy, this.velocity.vx];
+    return [this.velocity.vx, this.velocity.vy];
   }
 
   event() {
-    this.ball.addEventListener("click", (e) => {
-      // console.log("clicked", e);
+    this.ball.addEventListener("click", () => {
       console.log(this.velocity.vx, this.velocity.vy);
     });
   }
