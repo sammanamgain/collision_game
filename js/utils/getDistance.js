@@ -9,5 +9,5 @@ function isColliding(ball1, ball2) {
   const dx = ball1.position.x - ball2.position.x;
   const dy = ball1.position.y - ball2.position.y;
   const distance = Math.sqrt(dx * dx + dy * dy);
-  return distance < ball1.width / 2 + ball2.width / 2;
+  return distance < 20 + ball1.width / 2 + ball2.width / 2;
 }

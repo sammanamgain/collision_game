@@ -1,12 +1,14 @@
 class Ball {
   constructor({ position, dimension, color }) {
-    console.log("dimension", dimension);
     this.position = position;
-    this.velocity = { vx: Math.random() * 10, vy: Math.random() * 10 };
+    this.velocity = {
+      vx: (Math.random() - 0.5) * 5,
+      vy: (Math.random() - 0.5) * 5,
+    };
 
     this.height = dimension.y;
     this.width = dimension.x;
-    console.log(this.width);
+
     this.color = color || "white";
 
     this.draw();
@@ -60,21 +62,35 @@ class Ball {
       this.position.y += this.velocity.vy;
     }
 
-    this.gravity();
-
+    // const cellX = Math.floor(this.position.x / 100);
+    // const cellY = Math.floor(this.position.y / 100);
+    // console.log(cellX, cellY);
+    // console.log(grid);
+    // if (
+    //   grid &&
+    //   cellX >= 0 &&
+    //   cellX < numCellsX &&
+    //   cellY >= 0 &&
+    //   cellY < numCellsY
+    // ) {
+    //   grid[cellY][cellX].push(this);
+    // } else {
+    //   console.log("Invalid grid coordinates");
+    // }
     this.ball.style.left = this.position.x + "px";
     this.ball.style.top = this.position.y + "px";
+    // this.gravity();
   }
 
   // this.draw();
 
   gravity() {
     //using  v= u +at
-    this.velocity.vy += gravity * 0.00695;
+    this.velocity.vy += gravity * 0.000695;
   }
-  updateVelocity(v1x_final, v2x_final) {
-    this.velocity.vy = v1x_final;
-    this.velocity.vy = v2x_final;
+  updateVelocity(v1x_final, v1y_final) {
+    this.velocity.vx = v1x_final;
+    this.velocity.vy = v1y_final;
     this.update();
   }
 
@@ -94,7 +110,8 @@ class Ball {
 
   event() {
     this.ball.addEventListener("click", (e) => {
-      console.log("clicked", e);
+      // console.log("clicked", e);
+      console.log(this.velocity.vx, this.velocity.vy);
     });
   }
 }

@@ -8,12 +8,12 @@ function handleCollision(x1, y1, x2, y2, u1x, u1y, u2x, u2y, m1, m2) {
   let u1y_collision = u1y * Math.cos(angle) - u1x * Math.sin(angle);
   let u2x_collision = u2x * Math.cos(angle) + u2y * Math.sin(angle);
   let u2y_collision = u2y * Math.cos(angle) - u2x * Math.sin(angle);
-  // calculating the velocity after collision
 
+  // calculating the velocity after collision
   let vx1_collision_final =
     (u1x_collision * (m1 - m2) + 2 * m2 * u2x_collision) / (m1 + m2);
   let vx2_collision_final =
-    (u2x_collision * (m1 - m2) + 2 * m1 * u1x_collision) / (m1 + m2);
+    (u2x_collision * (m2 - m1) + 2 * m1 * u1x_collision) / (m1 + m2);
   let vy1_collision_final = u1y_collision;
   let vy2_collision_final = u2y_collision;
 
@@ -30,6 +30,7 @@ function handleCollision(x1, y1, x2, y2, u1x, u1y, u2x, u2y, m1, m2) {
   let v2y_final =
     vy2_collision_final * Math.cos(-angle) -
     vx2_collision_final * Math.sin(-angle);
+
 
   return [v1x_final, v1y_final, v2x_final, v2y_final];
 }
